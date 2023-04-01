@@ -1,1 +1,29 @@
-<p>patient works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Mockup de pacientes</mat-card-title>
+    <mat-card-subtitle>Mediante esta vista podrar gestionar el cargue de pacientes al CRM</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="grid grid-cols-2">
+      <div>
+        <mat-form-field class="form-field" style="width: 100%;" appearance="fill">
+          <mat-label>Ingresa un rango de fechas para consultar</mat-label>
+          <mat-date-range-input [formGroup]="rangoFecha" [rangePicker]="picker">
+            <input matStartDate placeholder="Fecha inicio" formControlName="start">
+            <input matEndDate placeholder="Fecha final" formControlName="end">
+          </mat-date-range-input>
+          <mat-hint>MM-DD-YYYY - MM-DD-YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-raised-button color="primary" style="margin-top: 25px;" (click)="getPatients()"
+          [disabled]="!(rangoFecha.value.start && rangoFecha.value.end)">Consultar</button>
+      </div>
+    </div>
+    <div class="grid-cols-1" [hidden]="patientDB.length == 0">
+      <app-table-material-layout [rows]="patientDB" [displayedColumns]="displayedColumns"></app-table-material-layout>
+    </div>
+  </mat-card-content>
+</mat-card>
