@@ -1,10 +1,9 @@
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Injectable, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Injectable, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
-import { MatSort, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Subject } from 'rxjs';
-import { ColumnTableMaterialLayout } from '../../interfaces/table';
+import { ColumnTableMaterialLayout, TableEvent } from './interfaces/table.interfaces';
 
 @Injectable()
 export class MyCustomPaginatorIntl implements MatPaginatorIntl {
@@ -37,9 +36,9 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
   providers: [{ provide: MatPaginatorIntl, useClass: MyCustomPaginatorIntl }],
 })
 export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
-  @Input() rows: any[] = []
   @Input() displayedColumns: ColumnTableMaterialLayout[] = []
-  dataSource = new MatTableDataSource<any[]>(this.rows);
+  @Output() eventEmmiter = new EventEmitter<TableEvent>()
+  dataSource = new MatTableDataSource<any[]>([]);
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any[]>;
@@ -51,15 +50,25 @@ export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  renderRows(rows: any[]){
-    this.dataSource.data = rows
-    this.table.renderRows()
+  /**
+   * EVENTS
+   */
+  emmitEvent(element: any, action: string){
+    const event: TableEvent = {
+      data: element,
+      action: action
+    }
+    this.eventEmmiter.emit(event)
   }
 
   /**
    * TABLE METHODS
-   */
-  applyFilter(event: Event) {
+  */
+ renderRows(rows: any[]){
+   this.dataSource.data = rows
+   this.table.renderRows()
+ }
+ applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 

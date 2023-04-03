@@ -11,7 +11,7 @@ export class PatientService {
   constructor(private httpClient: HttpClient) { }
 
   getPatients(startDate: string, endDate:string): Promise<IPatient[]> {
-    const patients$ = this.httpClient.get<IPatient[]>(`https://3373-181-143-74-238.ngrok.io/contacts/${startDate}/to/${endDate}`)
+    const patients$ = this.httpClient.get<IPatient[]>(`https://81bc-181-143-74-238.ngrok.io/contacts/${startDate}/to/${endDate}`)
     return lastValueFrom(patients$)
   }
 }

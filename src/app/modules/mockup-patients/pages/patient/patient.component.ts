@@ -3,10 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PatientService } from '../../services/patient.service';
 import { DateTime } from 'luxon';
-import { IPatient } from '../../interfaces/ipatient';
 import { MatTableDataSource } from '@angular/material/table';
-import { ColumnTableMaterialLayout } from '../../interfaces/table';
 import { TableMaterialLayoutComponent } from '../../components/table-material-layout/table-material-layout.component';
+import { IPatient } from '../../interfaces/ipatient';
+import { ColorButtom, ColumnTableMaterialLayout, TypeOption, TableEvent } from '../../components/table-material-layout/interfaces/table.interfaces';
 
 @Component({
   selector: 'app-patient',
@@ -27,11 +27,15 @@ export class PatientComponent implements OnInit {
     { label: 'Nombre', nameVar: 'Nombre' },
     { label: 'Apellido', nameVar: 'Apellido' },
     { label: 'Vinculacion', nameVar: 'Vinculacion' },
-    { label: 'EPS', nameVar: 'EPS' }
+    { label: 'EPS', nameVar: 'EPS' },
+    { label: 'Opciones', nameVar: 'Opciones', options: [
+      { label: 'info', icon: 'info', action: 'openInfo', type: TypeOption.BUTTON_ICON, colorButtom: ColorButtom.BASIC }
+    ]
+  },
   ]
 
   constructor(private _patientService: PatientService) { }
-  
+
   ngOnInit(): void { }
 
   getPatients() {
@@ -46,5 +50,9 @@ export class PatientComponent implements OnInit {
         this.tableMaterialLayoutComponent.renderRows(this.patientDB)
       })
     }
+  }
+
+  triggerTable(event: TableEvent){
+    console.log(event)
   }
 }
