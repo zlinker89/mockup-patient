@@ -42,7 +42,7 @@ export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatTable) table!: MatTable<any[]>;
-
+  isCheckedAll = false
   constructor() { }
   ngOnInit() { }
   ngAfterViewInit() {
@@ -59,6 +59,19 @@ export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
       action: action
     }
     this.eventEmmiter.emit(event)
+  }
+  triggerAllCheckbox() {
+    // if (this.dataSource.paginator) {
+    //   const page = this.dataSource.paginator.pageIndex
+    //   const data = this.dataSource.data
+    //   const take = this.dataSource.paginator.pageSize * page
+    //   console.log(data.slice(take, take + this.dataSource.paginator.pageSize))
+    // }
+    this.emmitEvent(this.isCheckedAll, 'triggerAllCheckbox')
+  }
+  triggerCheckbox(idx: number) {
+    console.log(idx)
+    this.emmitEvent(idx, 'triggerCheckbox')
   }
 
   /**

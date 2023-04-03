@@ -7,24 +7,37 @@
   <!-- Columns -->
   <ng-container *ngFor="let item of displayedColumns">
     <ng-container *ngIf="item.label" [matColumnDef]="item.label">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ item.label }} </th>
-      <td mat-cell *matCellDef="let element">
-        <ng-container *ngIf="item.label != 'Opciones'; else opciones">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <ng-container *ngIf="item.label != 'Checkbox'; else checks">
+          {{ item.label }}
+        </ng-container>
+        <ng-template #checks>
+          <mat-checkbox class="check-margin" matTooltip="Seleccionar/Deseleccionar todos los pacientes"
+            (change)="triggerAllCheckbox()" [(ngModel)]="isCheckedAll"></mat-checkbox>
+        </ng-template>
+      </th>
+      <td mat-cell *matCellDef="let element; let idx = index;">
+        <ng-container *ngIf="item.label != 'Opciones' && item.label != 'Checkbox'">
           {{ getValueFromProperty(element, item.nameVar) }}
         </ng-container>
-        <ng-template #opciones>
-            <ng-container *ngFor="let option of item.options">
-              <ng-container *ngIf="option.type == 'BUTTON_ICON'; else button_normal">
-                <button mat-mini-fab color="option.colorButton"
-                  matTooltip="{{ option.label }}" (click)="emmitEvent(element, option.action)">
-                  <mat-icon>{{ option.icon }}</mat-icon>
-                </button>
-              </ng-container>
-              <ng-template #button_normal>
-                <button mat-button color="option.colorButton" (click)="emmitEvent(element, option.action)">{{ option.label }}</button>
-              </ng-template>
+        <ng-container *ngIf="item.label == 'Opciones'">
+          <ng-container *ngFor="let option of item.options">
+            <ng-container *ngIf="option.type == 'BUTTON_ICON'; else button_normal">
+              <button mat-mini-fab color="option.colorButton" matTooltip="{{ option.label }}"
+                (click)="emmitEvent(element, option.action)">
+                <mat-icon>{{ option.icon }}</mat-icon>
+              </button>
             </ng-container>
-        </ng-template>
+            <ng-template #button_normal>
+              <button mat-button color="option.colorButton" (click)="emmitEvent(element, option.action)">
+                {{ option.label }}</button>
+            </ng-template>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="item.label == 'Checkbox'">
+          <mat-checkbox (change)="triggerCheckbox(idx)" [checked]="element.checked"
+            class="check-margin"></mat-checkbox>
+        </ng-container>
       </td>
     </ng-container>
   </ng-container>

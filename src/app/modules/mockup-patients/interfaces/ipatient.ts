@@ -20,4 +20,5 @@ export interface IPatient {
   Vinculacion: string;
   correo: string;
   credito: string;
+  checked?: boolean;
 }
