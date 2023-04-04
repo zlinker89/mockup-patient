@@ -37,6 +37,9 @@ export class MyCustomPaginatorIntl implements MatPaginatorIntl {
 })
 export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
   @Input() displayedColumns: ColumnTableMaterialLayout[] = []
+  @Input() dataSelected: any[] = []
+  @Input() selectionColumn: any[] = []
+  @Input() showButtonSend: boolean = false
   @Output() eventEmmiter = new EventEmitter<TableEvent>()
   dataSource = new MatTableDataSource<any[]>([]);
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -69,8 +72,10 @@ export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
     // }
     this.emmitEvent(this.isCheckedAll, 'triggerAllCheckbox')
   }
+  triggerDialog() {
+    this.emmitEvent(true, 'triggerDialog')
+  }
   triggerCheckbox(idx: number) {
-    console.log(idx)
     this.emmitEvent(idx, 'triggerCheckbox')
   }
 

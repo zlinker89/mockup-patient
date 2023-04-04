@@ -22,8 +22,8 @@
           [disabled]="!(rangoFecha.value.start && rangoFecha.value.end)">Consultar</button>
       </div>
     </div>
-    <div class="grid-cols-1" [hidden]="patientDB.length == 0">
-      <app-table-material-layout [displayedColumns]="displayedColumns" (eventEmmiter)="triggerTable($event)"></app-table-material-layout>
+    <div [hidden]="patientDB.length == 0">
+      <app-table-material-layout [dataSelected]="patientSelected" [showButtonSend]="true" [displayedColumns]="displayedColumns" (eventEmmiter)="triggerTable($event)"></app-table-material-layout>
     </div>
   </mat-card-content>
 </mat-card>

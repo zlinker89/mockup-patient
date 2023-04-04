@@ -8,12 +8,16 @@ import { NgMaterialModule } from '../ng-material/ng-material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableMaterialLayoutComponent } from './components/table-material-layout/table-material-layout.component';
 import { FormsModule } from '@angular/forms';
+import { DialogPatientSelectedComponent } from './components/dialog-patient-selected/dialog-patient-selected.component';
+import { MessageDialogComponent } from './components/message-dialog/message-dialog.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     PatientComponent,
-    TableMaterialLayoutComponent
+    TableMaterialLayoutComponent,
+    DialogPatientSelectedComponent,
+    MessageDialogComponent
   ],
   imports: [
     CommonModule,

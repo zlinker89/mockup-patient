@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { PatientService } from '../../services/patient.service';
@@ -12,6 +12,8 @@ import {
   TypeOption,
   TableEvent,
 } from '../../components/table-material-layout/interfaces/table.interfaces';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { DialogPatientSelectedComponent } from '../../components/dialog-patient-selected/dialog-patient-selected.component';
 
 @Component({
   selector: 'app-patient',
@@ -27,6 +29,7 @@ export class PatientComponent implements OnInit {
     end: new FormControl<string | null>(null),
   });
   patientDB: IPatient[] = [];
+  patientSelected: IPatient[] = [];
   dataSource = new MatTableDataSource<IPatient>([]);
   displayedColumns: ColumnTableMaterialLayout[] = [
     { label: 'Checkbox', nameVar: 'Checkbox' },
@@ -51,10 +54,35 @@ export class PatientComponent implements OnInit {
       ],
     },
   ];
+  displayedColumnsModal: ColumnTableMaterialLayout[] = [
+    { label: 'ID', nameVar: 'ID' },
+    { label: 'Nombre', nameVar: 'Nombre' },
+    { label: 'Apellido', nameVar: 'Apellido' },
+    { label: 'TipoIdentificacion', nameVar: 'TipoIdentificacion' },
+    { label: 'Identificacion', nameVar: 'Identificacion' },
+    { label: 'Vinculacion', nameVar: 'Vinculacion' },
+    { label: 'EPS', nameVar: 'EPS' },
+    { label: 'FaseVenta', nameVar: 'FaseVenta' },
+    {
+      label: 'Opciones',
+      nameVar: 'Opciones',
+      options: [
+        {
+          label: 'remover',
+          icon: 'delete',
+          action: 'deletePatient',
+          type: TypeOption.BUTTON_ICON,
+          colorButtom: ColorButtom.WARN,
+        },
+      ],
+    },
+  ];
 
-  constructor(private _patientService: PatientService) {}
+  constructor(private _patientService: PatientService, public dialog: MatDialog) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
 
   getPatients() {
     const startDate = DateTime.fromJSDate(this.rangoFecha.value.start).toFormat(
@@ -70,6 +98,7 @@ export class PatientComponent implements OnInit {
           for (let index = 0; index < data.length; index++) {
             data[index].ID = index + 1;
             data[index].checked = false
+            data[index].cf_1104 = ''
           }
           this.patientDB = data;
           this.tableMaterialLayoutComponent.renderRows(this.patientDB);
@@ -82,11 +111,15 @@ export class PatientComponent implements OnInit {
       case 'triggerAllCheckbox':
         for (let index = 0; index < this.patientDB.length; index++) {
           this.patientDB[index].checked = event.data;
+          this.addOrRemovePatient(this.patientDB[index])
         }
         this.tableMaterialLayoutComponent.renderRows(this.patientDB);
         break;
       case 'triggerCheckbox':
         this.changePatient(event)
+        break;
+      case 'triggerDialog':
+        this.openDialog()
         break;
       default:
         break;
@@ -98,6 +131,30 @@ export class PatientComponent implements OnInit {
    */
   changePatient(event: TableEvent){
     this.patientDB[event.data].checked = !this.patientDB[event.data].checked;
+    this.addOrRemovePatient(this.patientDB[event.data])
     this.tableMaterialLayoutComponent.renderRows(this.patientDB);
+  }
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogPatientSelectedComponent, {
+      width: '80wv',
+      height: '80wv',
+      data: {patientSelecteds: this.patientSelected, displayedColumns: this.displayedColumnsModal },
+      panelClass: 'fullscreen-dialog'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+  addOrRemovePatient(patient: IPatient){
+    const index = this.patientSelected.findIndex(x => x.Nombre == patient.Nombre && x.Apellido == patient.Apellido && x.Identificacion == patient.Identificacion)
+    this.addOrRemove(index, patient.checked, patient)
+  }
+  addOrRemove(index: number, checked: boolean | undefined, patient: IPatient){
+    if (!checked && index >= 0) {
+      this.patientSelected.splice(index, 1)
+    } else if (checked && index == -1){
+      this.patientSelected.push(patient)
+    }
   }
 }

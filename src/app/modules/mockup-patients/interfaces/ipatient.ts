@@ -21,4 +21,11 @@ export interface IPatient {
   correo: string;
   credito: string;
   checked?: boolean;
+  cf_1104?: string
+}
+
+export interface IResponseCRM{
+  nroContactosInsertados: number
+  nroContactosActualizados: number
+  nroOmitidos: number
 }

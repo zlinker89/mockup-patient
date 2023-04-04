@@ -1,10 +1,20 @@
 <div class="grid grid-cols-12">
-  <div class="col-span-10">
-    aa
+  <div class="col-span-10" *ngIf="showButtonSend">
+    <div class="grid grid-cols-3">
+      <div class="col-span-2">
+        Datos seleccionados {{ dataSelected.length }}
+      </div>
+      <div class="col-span-1">
+        <button mat-raised-button
+        color="accent"
+        (click)="triggerDialog()"
+        [disabled]="dataSelected.length == 0">Enviar</button>
+      </div>
+    </div>
   </div>
   <div class="col-span-2">
     <mat-form-field>
-      <mat-label>Filter</mat-label>
+      <mat-label>Filtro</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Criterio de busqueda" #input>
     </mat-form-field>
   </div>
@@ -44,6 +54,16 @@
           <ng-container *ngIf="item.label == 'Checkbox'">
             <mat-checkbox (change)="triggerCheckbox(idx)" [checked]="element.checked"
               class="check-margin"></mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="item.label == 'FaseVenta'">
+            <mat-form-field appearance="fill">
+              <mat-label>Embudo</mat-label>
+              <mat-select [(ngModel)]="element.cf_1104">
+                <mat-option *ngFor="let sc of selectionColumn" [value]="sc.cf_1104id">
+                  {{sc.cf_1104}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
           </ng-container>
         </td>
       </ng-container>
