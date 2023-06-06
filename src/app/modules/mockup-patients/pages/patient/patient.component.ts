@@ -62,7 +62,8 @@ export class PatientComponent implements OnInit {
     { label: 'Identificacion', nameVar: 'Identificacion' },
     { label: 'Vinculacion', nameVar: 'Vinculacion' },
     { label: 'EPS', nameVar: 'EPS' },
-    { label: 'FaseVenta', nameVar: 'FaseVenta' },
+    { label: 'Clasificacion', nameVar: 'Clasificacion' },
+    { label: 'Etapa', nameVar: 'Etapa' },
     {
       label: 'Opciones',
       nameVar: 'Opciones',
@@ -98,7 +99,7 @@ export class PatientComponent implements OnInit {
           for (let index = 0; index < data.length; index++) {
             data[index].ID = index + 1;
             data[index].checked = false
-            data[index].cf_1104 = ''
+            data[index].cf_1884 = ''
           }
           this.patientDB = data;
           this.tableMaterialLayoutComponent.renderRows(this.patientDB);

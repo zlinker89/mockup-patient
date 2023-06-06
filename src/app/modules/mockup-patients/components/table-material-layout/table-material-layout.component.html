@@ -55,12 +55,22 @@
             <mat-checkbox (change)="triggerCheckbox(idx)" [checked]="element.checked"
               class="check-margin"></mat-checkbox>
           </ng-container>
-          <ng-container *ngIf="item.label == 'FaseVenta'">
+          <ng-container *ngIf="item.label == 'Clasificacion'">
             <mat-form-field appearance="fill">
-              <mat-label>Embudo</mat-label>
-              <mat-select [(ngModel)]="element.cf_1104">
-                <mat-option *ngFor="let sc of selectionColumn" [value]="sc.cf_1104id">
-                  {{sc.cf_1104}}
+              <mat-label>Clasificación</mat-label>
+              <mat-select [(ngModel)]="element.cf_1884" (selectionChange)="onSelectClasificacion($event, idx)">
+                <mat-option *ngFor="let sc of selectionColumn" [value]="sc.cf_1884">
+                  {{sc.cf_1884}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-container *ngIf="item.label == 'Etapa'">
+            <mat-form-field appearance="fill">
+              <mat-label>Etapa</mat-label>
+              <mat-select [(ngModel)]="element.etapa">
+                <mat-option *ngFor="let sce of element.selectionColumnEtapa" [value]="sce">
+                  {{sce.etapa}}
                 </mat-option>
               </mat-select>
             </mat-form-field>

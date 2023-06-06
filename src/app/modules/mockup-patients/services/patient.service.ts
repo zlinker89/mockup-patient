@@ -1,28 +1,38 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { lastValueFrom, Observable } from 'rxjs';
 import { IPatient, IResponseCRM } from '../interfaces/ipatient';
 import { IWorkFlow } from '../interfaces/iwork-flow';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PatientService {
+  constructor(
+    private httpClient: HttpClient,
+    @Inject('URL_GOS') private readonly URL_GOS: string,
+    @Inject('URL_AVU') private readonly URL_AVU: string
+  ) {}
 
-  constructor(private httpClient: HttpClient) { }
-
-  getPatients(startDate: string, endDate:string): Promise<IPatient[]> {
-    const patients$ = this.httpClient.get<IPatient[]>(`https://8066-181-143-74-238.ngrok.io/contacts/${startDate}/to/${endDate}`)
-    return lastValueFrom(patients$)
+  getPatients(startDate: string, endDate: string): Promise<IPatient[]> {
+    const patients$ = this.httpClient.get<IPatient[]>(
+      `${this.URL_GOS}/contacts/${startDate}/to/${endDate}`
+    );
+    return lastValueFrom(patients$);
   }
 
-  getWorkFlows(){
-    const workFlows$ = this.httpClient.get<IWorkFlow[]>(`https://api-update-vtiger.oralhome.com.co/api/workflows`)
-    return lastValueFrom(workFlows$)
+  getWorkFlows() {
+    const workFlows$ = this.httpClient.get<IWorkFlow[]>(
+      `${this.URL_AVU}/api/workflows`
+    );
+    return lastValueFrom(workFlows$);
   }
 
-  sendContacts(data: { contacts: any[]}){
-    const result$ = this.httpClient.post<IResponseCRM>(`https://api-update-vtiger.oralhome.com.co/api/contact/store`, data)
-    return lastValueFrom(result$)
+  sendContacts(data: { contacts: any[] }) {
+    const result$ = this.httpClient.post<IResponseCRM>(
+      `${this.URL_AVU}/api/contact/store`,
+      data
+    );
+    return lastValueFrom(result$);
   }
 }

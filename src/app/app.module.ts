@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,16 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserAnimationsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+        provide: 'URL_GOS',
+        useValue: environment.baseUrlGOS
+    },
+    {
+        provide: 'URL_AVU',
+        useValue: environment.baseUrlAVU
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

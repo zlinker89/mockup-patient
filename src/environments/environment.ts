@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  baseUrlGOS: "https://b3c5-181-143-74-238.ngrok-free.app", // Gestion odontologica service
+  baseUrlAVU: "http://localhost:8000", // API vtiger update
 };
 
 /*

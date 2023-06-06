@@ -21,11 +21,18 @@ export interface IPatient {
   correo: string;
   credito: string;
   checked?: boolean;
-  cf_1104?: string
+  cf_1884?: string
+  etapa?: IEtapa
+  selectionColumnEtapa?: any[]
 }
 
 export interface IResponseCRM{
   nroContactosInsertados: number
   nroContactosActualizados: number
   nroOmitidos: number
+}
+
+interface IEtapa{
+  etapa: string
+  campo: string
 }
