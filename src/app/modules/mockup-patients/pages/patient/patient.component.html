@@ -4,8 +4,18 @@
     <mat-card-subtitle>Mediante esta vista podrar gestionar el cargue de pacientes al CRM</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <div class="grid grid-cols-2">
+    <div class="grid grid-cols-4">
       <div>
+        <mat-form-field class="date-form" style="width: 100%;" appearance="fill">
+          <mat-label>Origenes de datos:</mat-label>
+          <mat-select [(ngModel)]="origen">
+            <mat-option *ngFor="let o of origenes" [value]="o.sortorderid">
+              {{o.cf_1896}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="origen >= 0">
         <mat-form-field class="date-form" style="width: 100%;" appearance="fill">
           <mat-label>Ingresa un rango de fechas para consultar</mat-label>
           <mat-date-range-input [formGroup]="rangoFecha" [rangePicker]="picker">
@@ -17,7 +27,7 @@
           <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
       </div>
-      <div>
+      <div *ngIf="origen >= 0">
         <button mat-raised-button color="primary" style="margin-top: 15px;" (click)="getPatients()"
           [disabled]="!(rangoFecha.value.start && rangoFecha.value.end)">Consultar</button>
       </div>

@@ -3,6 +3,7 @@ import { Injectable, Inject } from '@angular/core';
 import { lastValueFrom, Observable } from 'rxjs';
 import { IPatient, IResponseCRM } from '../interfaces/ipatient';
 import { IWorkFlow } from '../interfaces/iwork-flow';
+import { IOrigen } from '../interfaces/iorigen';
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +27,13 @@ export class PatientService {
       `${this.URL_AVU}/api/workflows`
     );
     return lastValueFrom(workFlows$);
+  }
+
+  getoOrigenes() {
+    const origenes$ = this.httpClient.get<IOrigen[]>(
+      `${this.URL_AVU}/api/origenes`
+    );
+    return lastValueFrom(origenes$);
   }
 
   sendContacts(data: { contacts: any[] }) {

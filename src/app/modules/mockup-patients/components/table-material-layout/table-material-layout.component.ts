@@ -108,7 +108,7 @@ export class TableMaterialLayoutComponent implements OnInit, AfterViewInit {
     ).map((x: any) => {
       return {
         etapa: x[label],
-        campo: label,
+        campo: 'cf_1894',
       };
     });
     this.renderRows(this.dataSelected)

@@ -12,8 +12,13 @@ import {
   TypeOption,
   TableEvent,
 } from '../../components/table-material-layout/interfaces/table.interfaces';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { DialogPatientSelectedComponent } from '../../components/dialog-patient-selected/dialog-patient-selected.component';
+import { IOrigen } from '../../interfaces/iorigen';
 
 @Component({
   selector: 'app-patient',
@@ -30,7 +35,9 @@ export class PatientComponent implements OnInit {
   });
   patientDB: IPatient[] = [];
   patientSelected: IPatient[] = [];
+  origenes: IOrigen[] = [];
   dataSource = new MatTableDataSource<IPatient>([]);
+  origen: number = -1;
   displayedColumns: ColumnTableMaterialLayout[] = [
     { label: 'Checkbox', nameVar: 'Checkbox' },
     { label: 'ID', nameVar: 'ID' },
@@ -79,10 +86,17 @@ export class PatientComponent implements OnInit {
     },
   ];
 
-  constructor(private _patientService: PatientService, public dialog: MatDialog) {}
+  constructor(
+    private _patientService: PatientService,
+    public dialog: MatDialog
+  ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+    await this.getOrigenes();
+  }
 
+  async getOrigenes() {
+    this.origenes = await this._patientService.getoOrigenes();
   }
 
   getPatients() {
@@ -93,18 +107,25 @@ export class PatientComponent implements OnInit {
       'yyyyMMdd'
     );
     if (this.rangoFecha.value.start && this.rangoFecha.value.end) {
-      this._patientService
-        .getPatients(startDate, endDate)
-        .then((data: IPatient[]) => {
-          for (let index = 0; index < data.length; index++) {
-            data[index].ID = index + 1;
-            data[index].checked = false
-            data[index].cf_1884 = ''
-          }
-          this.patientDB = data;
-          this.tableMaterialLayoutComponent.renderRows(this.patientDB);
-        });
+      if (this.origen == 0) {
+        this.getPacientesGO(startDate, endDate);
+      }
     }
+  }
+
+  getPacientesGO(startDate: string, endDate: string) {
+    this._patientService
+      .getPatients(startDate, endDate)
+      .then((data: IPatient[]) => {
+        for (let index = 0; index < data.length; index++) {
+          data[index].ID = index + 1;
+          data[index].checked = false;
+          data[index].cf_1884 = '';
+        }
+        this.patientDB = data;
+        this.tableMaterialLayoutComponent.renderRows(this.patientDB);
+      })
+      .catch((err) => console.error(err));
   }
 
   triggerTable(event: TableEvent) {
@@ -112,15 +133,15 @@ export class PatientComponent implements OnInit {
       case 'triggerAllCheckbox':
         for (let index = 0; index < this.patientDB.length; index++) {
           this.patientDB[index].checked = event.data;
-          this.addOrRemovePatient(this.patientDB[index])
+          this.addOrRemovePatient(this.patientDB[index]);
         }
         this.tableMaterialLayoutComponent.renderRows(this.patientDB);
         break;
       case 'triggerCheckbox':
-        this.changePatient(event)
+        this.changePatient(event);
         break;
       case 'triggerDialog':
-        this.openDialog()
+        this.openDialog();
         break;
       default:
         break;
@@ -130,32 +151,42 @@ export class PatientComponent implements OnInit {
   /**
    * METHODS
    */
-  changePatient(event: TableEvent){
+  changePatient(event: TableEvent) {
     this.patientDB[event.data].checked = !this.patientDB[event.data].checked;
-    this.addOrRemovePatient(this.patientDB[event.data])
+    this.addOrRemovePatient(this.patientDB[event.data]);
     this.tableMaterialLayoutComponent.renderRows(this.patientDB);
   }
   openDialog(): void {
+    const indexOrigen = this.origenes.findIndex(x => x.sortorderid == this.origen)
     const dialogRef = this.dialog.open(DialogPatientSelectedComponent, {
       width: '80wv',
       height: '80wv',
-      data: {patientSelecteds: this.patientSelected, displayedColumns: this.displayedColumnsModal },
-      panelClass: 'fullscreen-dialog'
+      data: {
+        origen: this.origenes[indexOrigen].cf_1896,
+        patientSelecteds: this.patientSelected,
+        displayedColumns: this.displayedColumnsModal,
+      },
+      panelClass: 'fullscreen-dialog',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
     });
   }
-  addOrRemovePatient(patient: IPatient){
-    const index = this.patientSelected.findIndex(x => x.Nombre == patient.Nombre && x.Apellido == patient.Apellido && x.Identificacion == patient.Identificacion)
-    this.addOrRemove(index, patient.checked, patient)
+  addOrRemovePatient(patient: IPatient) {
+    const index = this.patientSelected.findIndex(
+      (x) =>
+        x.Nombre == patient.Nombre &&
+        x.Apellido == patient.Apellido &&
+        x.Identificacion == patient.Identificacion
+    );
+    this.addOrRemove(index, patient.checked, patient);
   }
-  addOrRemove(index: number, checked: boolean | undefined, patient: IPatient){
+  addOrRemove(index: number, checked: boolean | undefined, patient: IPatient) {
     if (!checked && index >= 0) {
-      this.patientSelected.splice(index, 1)
-    } else if (checked && index == -1){
-      this.patientSelected.push(patient)
+      this.patientSelected.splice(index, 1);
+    } else if (checked && index == -1) {
+      this.patientSelected.push(patient);
     }
   }
 }

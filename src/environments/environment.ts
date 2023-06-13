@@ -4,8 +4,9 @@
 
 export const environment = {
   production: false,
-  baseUrlGOS: "https://b3c5-181-143-74-238.ngrok-free.app", // Gestion odontologica service
-  baseUrlAVU: "http://localhost:8000", // API vtiger update
+  baseUrlGOS: "https://3ed6-181-143-74-238.ngrok-free.app", // Gestion odontologica service
+  // baseUrlAVU: "http://localhost:8000", // API vtiger update
+  baseUrlAVU: "https://api-update-vtiger.oralhome.com.co", // API vtiger update
 };
 
 /*

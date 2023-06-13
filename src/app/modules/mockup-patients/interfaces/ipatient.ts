@@ -20,6 +20,7 @@ export interface IPatient {
   Vinculacion: string;
   correo: string;
   credito: string;
+  origen: string;
   checked?: boolean;
   cf_1884?: string
   etapa?: IEtapa

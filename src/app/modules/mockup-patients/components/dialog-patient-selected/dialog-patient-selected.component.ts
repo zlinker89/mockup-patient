@@ -8,6 +8,7 @@ import { IWorkFlow } from '../../interfaces/iwork-flow';
 import { MessageDialogComponent } from '../message-dialog/message-dialog.component';
 
 export interface DialogData {
+  origen: string;
   patientSelecteds: IPatient[];
   displayedColumns: ColumnTableMaterialLayout[];
 }
@@ -20,6 +21,7 @@ export class DialogPatientSelectedComponent implements OnInit, AfterViewInit {
   @ViewChild(TableMaterialLayoutComponent) tableMaterialLayoutComponent!: TableMaterialLayoutComponent;
   patientSelecteds: IPatient[] = [];
   displayedColumns: ColumnTableMaterialLayout[] = [];
+  origen: string = '';
   workFlows: IWorkFlow[] = []
   isLoading = false
   tipoEnvio: string = 'Contacto'
@@ -39,6 +41,7 @@ export class DialogPatientSelectedComponent implements OnInit, AfterViewInit {
     this.isLoading = false
     this.patientSelecteds = this.data.patientSelecteds
     this.displayedColumns = this.data.displayedColumns
+    this.origen = this.data.origen
     this.tableMaterialLayoutComponent.renderRows(this.data.patientSelecteds)
   }
 
@@ -50,6 +53,7 @@ export class DialogPatientSelectedComponent implements OnInit, AfterViewInit {
     if (this.tipoEnvio == 'Contacto') {
       this.isLoading = true
       const obj = {
+        origen: this.origen,
         contacts: this.patientSelecteds
       }
       try {
